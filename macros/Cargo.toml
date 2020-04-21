@@ -1,0 +1,13 @@
+[package]
+name = "macros"
+version = "0.1.0"
+authors = ["tyanboot <tyanboot@outlook.com>"]
+edition = "2018"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0"
+syn = { version = "1.0", features = ["extra-traits", "clone-impls"] }
+proc-macro2 = "1.0"
