@@ -1,0 +1,19 @@
+name: Test Build
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  build:
+    steps:
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1.0.3
+        with:
+          toolchain: stable
+      - name: Build
+        run: cargo build --verbose
+      - name: Test
+        run: cargo test --verbose
