@@ -25,7 +25,7 @@ pub async fn recover_error(rejection: Rejection) -> std::result::Result<Response
         *resp.body_mut() = Body::from(app_error.to_string());
         *resp.status_mut() = match app_error {
             AppError::Unauthorized => StatusCode::UNAUTHORIZED,
-            _ => StatusCode::OK
+            _ => StatusCode::OK,
         };
 
         Ok(resp)

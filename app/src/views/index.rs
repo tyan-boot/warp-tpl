@@ -3,11 +3,11 @@ use warp::filters::BoxedFilter;
 use warp::Filter;
 use warp::Reply;
 
+use crate::auth::{require_login, LoginGuard};
 use crate::errors::AppError;
 use crate::errors::Result;
-use crate::auth::{LoginGuard, require_login};
 
-pub(super) fn route() -> BoxedFilter<(impl Reply, )> {
+pub(super) fn route() -> BoxedFilter<(impl Reply,)> {
     let hello = warp::get().and(warp::path("hello")).and_then(hello);
 
     let hello_error = warp::get()
