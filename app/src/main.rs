@@ -1,5 +1,6 @@
 mod errors;
 mod views;
+mod auth;
 
 use views::build_server;
 
