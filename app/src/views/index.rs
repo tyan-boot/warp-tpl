@@ -9,7 +9,7 @@ use crate::errors::Result;
 use crate::state::AppState;
 
 pub(super) fn route(state: AppState) -> BoxedFilter<(impl Reply,)> {
-    let state = with_state!(state);
+    let with_state = with_state!(state);
 
     let hello = warp::get().and(warp::path("hello")).and_then(hello);
 
@@ -19,12 +19,12 @@ pub(super) fn route(state: AppState) -> BoxedFilter<(impl Reply,)> {
 
     let hello_require_login = warp::get()
         .and(warp::path("hello_require_login"))
-        .and(require_login())
+        .and(require_login(state.clone()))
         .and_then(hello_require_login);
 
     let hello_with_state = warp::get()
         .and(warp::path("hello_with_state"))
-        .and(state)
+        .and(with_state)
         .and_then(hello_with_state);
 
     let route = warp::any().and(
