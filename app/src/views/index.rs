@@ -6,8 +6,11 @@ use warp::Reply;
 use crate::auth::{require_login, LoginGuard};
 use crate::errors::AppError;
 use crate::errors::Result;
+use crate::state::AppState;
 
-pub(super) fn route() -> BoxedFilter<(impl Reply,)> {
+pub(super) fn route(state: AppState) -> BoxedFilter<(impl Reply,)> {
+    let state = with_state!(state);
+
     let hello = warp::get().and(warp::path("hello")).and_then(hello);
 
     let hello_error = warp::get()
@@ -19,7 +22,17 @@ pub(super) fn route() -> BoxedFilter<(impl Reply,)> {
         .and(require_login())
         .and_then(hello_require_login);
 
-    let route = warp::any().and(hello.or(hello_error).or(hello_require_login));
+    let hello_with_state = warp::get()
+        .and(warp::path("hello_with_state"))
+        .and(state)
+        .and_then(hello_with_state);
+
+    let route = warp::any().and(
+        hello
+            .or(hello_error)
+            .or(hello_require_login)
+            .or(hello_with_state),
+    );
 
     route.boxed()
 }
@@ -38,4 +51,11 @@ async fn hello_error() -> Result<&'static str> {
 #[route_wrapper]
 async fn hello_require_login(_guard: LoginGuard) -> Result<&'static str> {
     Ok("you are logged in")
+}
+
+#[route_wrapper]
+async fn hello_with_state(state: AppState) -> Result<&'static str> {
+    let _ = state.db.query();
+
+    Ok("hello with state")
 }

@@ -1,12 +1,19 @@
-mod auth;
-mod errors;
-mod views;
-
 use views::build_server;
 
+use crate::errors::AppError;
+use crate::state::AppState;
+
+mod auth;
+mod errors;
+#[macro_use]
+mod state;
+mod views;
+
 #[tokio::main]
-async fn main() -> Result<(), std::io::Error> {
-    let server = build_server();
+async fn main() -> Result<(), AppError> {
+    let state = AppState::create()?;
+
+    let server = build_server(state);
 
     server.run(([127, 0, 0, 1], 8080)).await;
 
