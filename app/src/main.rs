@@ -11,6 +11,8 @@ mod views;
 
 #[tokio::main]
 async fn main() -> Result<(), AppError> {
+    env_logger::init();
+
     let state = AppState::create()?;
 
     let server = build_server(state);

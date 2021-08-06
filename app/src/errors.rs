@@ -1,6 +1,6 @@
 use thiserror::Error;
-use warp::hyper::http::StatusCode;
 use warp::hyper::Body;
+use warp::hyper::http::StatusCode;
 use warp::reject::{Reject, Rejection};
 use warp::reply::Response;
 
@@ -15,7 +15,7 @@ pub enum AppError {
 
 impl Reject for AppError {}
 
-pub type Result<T> = std::result::Result<T, AppError>;
+pub type Result<T, E = AppError> = std::result::Result<T, E>;
 
 pub async fn recover_error(rejection: Rejection) -> std::result::Result<Response, Rejection> {
     let mut resp = Response::default();
